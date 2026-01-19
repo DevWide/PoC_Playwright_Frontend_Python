@@ -1,15 +1,18 @@
-name: Playwright UI Tests
+name: Playwright Tests
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ "main", "master" ]
 
 jobs:
-  ui-tests:
-    name: Run Playwright Tests
+  tests:
     runs-on: ubuntu-latest
+
+    env:
+      ENV: prod
+      HEADLESS: "true"
+      BROWSER: chromium
 
     steps:
       - name: Checkout repository
@@ -20,14 +23,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install system dependencies
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y make
+          python -m venv venv
+          . venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
 
-      - name: Install project dependencies
-        run: make install
-
-      - name: Run UI tests
-        run: make test-ci
-
+      - name: Run tests
+        run: |
+          . venv/bin/activate
+          make test-ci

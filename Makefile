@@ -37,8 +37,8 @@ test:
 # -------------------------
 # Run tests (CI)
 # -------------------------
-test-ci:
-	ENV=prod HEADLESS=true $(ACTIVATE) && pytest --cache-clear
+test-ci:	
+	ENV=prod HEADLESS=true pytest --cache-clear
 
 # -------------------------
 # Clean project
